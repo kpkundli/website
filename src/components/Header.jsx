@@ -1,49 +1,41 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import TermsModal from './TermsModal'
-import PrivacyModal from './PrivacyModal'
 import './Header.css'
 
-const Header = () => {
-  const [showTerms, setShowTerms] = useState(false)
-  const [showPrivacy, setShowPrivacy] = useState(false)
+const Header = ({ onOpenTerms, onOpenPrivacy }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <>
       <motion.header 
         className="header"
-        initial={{ y: -100, opacity: 0 }}
+        initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.5 }}
       >
         <div className="header-container">
-          <motion.div 
-            className="logo"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 400 }}
-          >
+          <div className="logo">
             <div className="logo-icon">
-              <img src="/logo.png" alt="KP Kundli Services" className="logo-image" />
+              <img src="/logo.png" alt="KP Kundli" className="logo-image" />
             </div>
             <div className="logo-text">
-              <h1>KP Kundli Services</h1>
-              <span>Professional Kundli Creation</span>
+              <h1>KP Kundli</h1>
+              <span>Chart Preparation Service</span>
             </div>
-          </motion.div>
+          </div>
 
           <nav className={`nav ${mobileMenuOpen ? 'nav-open' : ''}`}>
             <div className="nav-links">
               <div className="legal-links">
                 <button 
-                  onClick={() => setShowTerms(true)}
+                  onClick={() => { setMobileMenuOpen(false); onOpenTerms?.() }}
                   className="legal-link"
                 >
                   Terms & Conditions
                 </button>
                 <button 
-                  onClick={() => setShowPrivacy(true)}
+                  onClick={() => { setMobileMenuOpen(false); onOpenPrivacy?.() }}
                   className="legal-link"
                 >
                   Privacy Policy
@@ -55,16 +47,12 @@ const Header = () => {
           <button 
             className="mobile-menu-btn"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
-
-        <div className="header-glow"></div>
       </motion.header>
-
-      {showTerms && <TermsModal onClose={() => setShowTerms(false)} />}
-      {showPrivacy && <PrivacyModal onClose={() => setShowPrivacy(false)} />}
     </>
   )
 }

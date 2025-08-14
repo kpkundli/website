@@ -1,25 +1,11 @@
+/* App shell */
 .app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(180deg, #0e0f12 0%, #121318 100%);
 }
 
-.main-section {
-  padding: 4rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+main {
+  display: block;
 }
 
-.success-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .main-section {
-    padding: 2rem 1rem;
-  }
-}
+/* Removed unused classes and gradients */
