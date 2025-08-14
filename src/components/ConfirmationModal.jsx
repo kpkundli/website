@@ -5,6 +5,7 @@ import './ConfirmationModal.css'
 
 const ConfirmationModal = ({ formData, onClose }) => {
   const [paid, setPaid] = useState(false)
+  const [posting, setPosting] = useState(false)
 
   useEffect(() => {
     if (!paid) return
@@ -22,6 +23,35 @@ const ConfirmationModal = ({ formData, onClose }) => {
     const ampm = hour >= 12 ? 'PM' : 'AM'
     const displayHour = hour % 12 || 12
     return `${displayHour}:${minutes}:${seconds} ${ampm}`
+  }
+
+  const handleConfirmPayment = async () => {
+    if (posting) return
+    setPosting(true)
+    try {
+      await fetch('https://formspree.io/f/mgvzqyrb', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          _subject: 'New KP Kundli Request',
+          _replyto: formData.email,
+          name: formData.name,
+          gender: formData.gender,
+          placeOfBirth: formData.placeOfBirth,
+          dateOfBirth: formData.dateOfBirth,
+          timeOfBirth: formData.timeOfBirth,
+          email: formData.email,
+        }),
+      })
+    } catch {
+      // ignore errors, still proceed to success UI
+    } finally {
+      setPaid(true)
+      setPosting(false)
+    }
   }
 
   const modalVariants = { hidden: { opacity: 0, scale: 0.96 }, visible: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.96 } }
@@ -76,10 +106,10 @@ const ConfirmationModal = ({ formData, onClose }) => {
             </motion.div>
 
             <motion.div className="modal-actions" variants={itemVariants}>
-              <motion.button className="confirm-btn" onClick={() => setPaid(true)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <CheckCircle size={16} /> Payment completed
+              <motion.button className="confirm-btn" onClick={handleConfirmPayment} whileHover={{ scale: posting ? 1 : 1.02 }} whileTap={{ scale: posting ? 1 : 0.98 }} disabled={posting}>
+                <CheckCircle size={16} /> {posting ? 'Processing…' : 'Payment completed'}
               </motion.button>
-              <button className="cancel-btn" onClick={onClose}>Cancel</button>
+              <button className="cancel-btn" onClick={onClose} disabled={posting}>Cancel</button>
             </motion.div>
           </motion.div>
         ) : (
